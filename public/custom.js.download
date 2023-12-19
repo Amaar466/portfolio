@@ -1,0 +1,77 @@
+$(document).ready(function () {
+	$(".hero-text-box").waypoint(function (n) {
+		"down" == n ? $("nav").addClass("sticky-nav") : $("nav").removeClass("sticky-nav")
+	}), $(function () {
+		$(".roky").click(function () {
+			if (location.pathname.replace(/^\//, "") == this.pathname.replace(/^\//, "") && location.hostname == this.hostname) {
+				var n = $(this.hash);
+				if ((n = n.length ? n : $("[name=" + this.hash.slice(1) + "]")).length) return $("html,body").animate({
+					scrollTop: n.offset().top - 60
+				}, 1e3), !1
+			}
+		})
+    }), $(".js-mobile-res").click(function () {
+        var n = $(".js-mobile-res i"),
+            a = $(".main-nav");
+        n.hasClass("ion-md-menu") ? (n.addClass("ion-md-close"), n.removeClass("ion-md-menu")) : (n.addClass("ion-md-menu"), n.removeClass("ion-md-close")), a.toggleClass("active")
+    }), $(".js-main-nav li a").on("click touch", function () {
+        $(window).width() < 760 && $(".js-mobile-res").click()
+    })
+}), $(function () {
+    (new WOW).init()
+});
+
+const form = document.querySelector('form[name="contact"]');
+const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const messageInput = document.getElementById('message');
+const submitBtn = document.querySelector('.send-btn');
+const formContainer = document.querySelector('#form');
+
+form.addEventListener('submit', e => {
+    e.preventDefault(); // Prevent default form submission
+
+    const data = new FormData(form); // Create a new FormData object to collect form data
+    submitBtn.disabled = true; // Disable submit button to prevent multiple submissions
+
+    // Send a POST request to the server with the form data
+    fetch('/contact/', {
+        method: 'POST',
+        body: data
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show a success message using SweetAlert2
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Thanks for contacting us!'
+                });
+
+                // Clear the form inputs
+                nameInput.value = '';
+                emailInput.value = '';
+                messageInput.value = '';
+            } else {
+                // Show an error message using SweetAlert2
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'There was an error submitting the form. Please try again.'
+                });
+            }
+        })
+        .catch(error => {
+            // Show an error message using SweetAlert2
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'There was an error submitting the form. Please try again.'
+            });
+        })
+        .finally(() => {
+            submitBtn.disabled = false; // Re-enable the submit button
+        });
+});

@@ -1,0 +1,80 @@
+$(document).ready(function () {
+	$(".hero-text-box").waypoint(function (n) {
+		"down" == n ? $("nav").addClass("sticky-nav") : $("nav").removeClass("sticky-nav")
+	}), $(function () {
+		$(".roky").click(function () {
+			if (location.pathname.replace(/^\//, "") == this.pathname.replace(/^\//, "") && location.hostname == this.hostname) {
+				var n = $(this.hash);
+				if ((n = n.length ? n : $("[name=" + this.hash.slice(1) + "]")).length) return $("html,body").animate({
+					scrollTop: n.offset().top - 60
+				}, 1e3), !1
+			}
+		})
+    }), $(".js-mobile-res").click(function () {
+        var n = $(".js-mobile-res i"),
+            a = $(".main-nav");
+        n.hasClass("ion-md-menu") ? (n.addClass("ion-md-close"), n.removeClass("ion-md-menu")) : (n.addClass("ion-md-menu"), n.removeClass("ion-md-close")), a.toggleClass("active")
+    }), $(".js-main-nav li a").on("click touch", function () {
+        $(window).width() < 760 && $(".js-mobile-res").click()
+    })
+}), $(function () {
+    (new WOW).init()
+});
+
+const form = document.querySelector('form[name="contact"]');
+const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const messageInput = document.getElementById('message');
+const submitBtn = document.querySelector('.send-btn');
+const formContainer = document.querySelector('#form');
+// /*
+// Aggiungi un listener per l'evento di invio del modulo
+form.addEventListener('submit', e => {
+    e.preventDefault(); // Impedisce la sottomissione predefinita del modulo
+
+    const data = new FormData(form); // Crea un nuovo oggetto FormData per raccogliere i dati del modulo
+    submitBtn.disabled = true; // Disabilita il pulsante di invio per evitare invii multipli
+
+    // Invia una richiesta POST al server con i dati del modulo
+    fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: data
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Mostra un messaggio di successo usando SweetAlert2
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Successo!',
+                    text: 'Grazie per averci contattato!'
+                });
+
+                // Cancella gli input del modulo
+                nameInput.value = '';
+                emailInput.value = '';
+                messageInput.value = '';
+            } else {
+                // Mostra un messaggio di errore usando SweetAlert2
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ops...',
+                    text: 'Si è verificato un errore durante l\'invio del modulo. Riprova.'
+                });
+            }
+        })
+        .catch(error => {
+            // Mostra un messaggio di errore usando SweetAlert2
+            Swal.fire({
+                icon: 'error',
+                title: 'Ops...',
+                text: 'Si è verificato un errore durante l\'invio del modulo. Riprova.'
+            });
+        })
+        .finally(() => {
+            submitBtn.disabled = false; // Riabilita il pulsante di invio
+        });
+});
+
+// */
